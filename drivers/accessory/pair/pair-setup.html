@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='assets/mui.min.css'>
+    <link rel='stylesheet' href='assets/style.css'>
+    <script src='assets/vue.min.js'></script>
+  </head>
+  <body class='homekit-client'>
+    <div id='container-pair-setup' class='mui-container-fluid'>
+      <div v-if='accessory' class='mui-panel'>
+        <h3>Pair with <i>{{ accessory.name }}</i></h3>
+        <p>
+          Pairing means that Homey and <i>{{ accessory.name }}</i> exchange pleasanteries, after which Homey is allowed to control <i>{{ accessory.name }}</i>.
+        </p>
+        <p>
+          This is only the first step of the process. If <i>{{ accessory.name }}</i> is a bridge device (often called a "hub"), it typically controls multiple devices itself.
+          So first, we will add <i>{{ accessory.name }}</i> as a device. Once that has succeeded, and if <i>{{ accessory.name }}</i> is a bridge device, you can then
+          add the individual devices to Homey.
+        </p>
+        <p>
+          Before <i>{{ accessory.name }}</i> will accept anything from Homey, it requires that Homey sends the HomeKit Setup Code. This code is generally
+          found on a sticker on the device, and looks something like this:
+        </p>
+        <img src='assets/setup-code.png' style='display: block; margin: 0 auto;'>
+        <p>
+          Please find the setup code for <i>{{ accessory.name }}</i> and enter it here:<br>
+        </p>
+        <form class='mui-form--inline'>
+          <div class='mui-textfield'>
+            <input
+              v-model     = pin
+              type        = text
+              placeholder = 'XXX-XX-XXX'
+              pattern     = '^[0-9]{3}-[0-9]{2}-[0-9]{3}$'
+              required></input>
+          </div>
+          <button
+            class          = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
+            :disabled      = '! validPin || isPairing'
+            @click.prevent = 'startPairingProcess()'>Start pairing</button>
+          <div class='spinner small' v-if='isPairing'></div>
+        </form>
+      </div>
+      <div v-else>
+        <div class='spinner'></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    if (! window.Homey) {
+      Homey = {
+        emit(d, data, cb) {
+          cb(null, {"name":"TRADFRI gateway","address":"192.168.23.102","port":80,"c#":237,"ff":1,"id":"3E:57:8F:93:50:78","md":"TRADFRI gateway","pv":"1.0","s#":1,"sf":0,"ci":2});
+        },
+      }
+    }
+    new Vue({
+      el:      '#container-pair-setup',
+      data:    {
+        accessory: null,
+        pin:       null,
+        validPin:  false,
+        isPairing: false,
+      },
+      mounted() {
+        Homey.emit('getPairingTarget', null, (err, accessory) => {
+          console.log('Got pairing target:', accessory);
+          this.accessory = accessory;
+        });
+      },
+      watch: {
+        pin(pin) {
+          this.validPin = /^\d{3}-\d{2}-\d{3}$/.test(pin);
+        }
+      },
+      methods : {
+        handleError(msg) {
+          return Homey.alert(msg, 'error', () => {
+            return Homey.showView('discover');
+          });
+        },
+        startPairingProcess() {
+          this.isPairing = true;
+          Homey.emit('startPairingProcess', this.pin, (err, device) => {
+            this.isPairing = false;
+            if (err) return this.handleError('Pairing failed: ' + err);
+            console.log('Should add', device);
+            Homey.addDevice(device, err => {
+              if (err) return this.handleError('Adding device failed: ' + err);
+              Homey.alert('Device added successfully!', 'info', () => Homey.done());
+            });
+          });
+        }
+      }
+    });
+  </script>
+</html>

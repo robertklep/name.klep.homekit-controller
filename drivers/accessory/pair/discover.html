@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='assets/mui.min.css'>
+    <link rel='stylesheet' href='assets/style.css'>
+    <!--
+    <script src='https://cdn.muicss.com/mui-0.9.41/js/mui.min.js'></script>
+    -->
+    <script src='assets/vue.min.js'></script>
+  </head>
+  <body class='homekit-client'>
+    <div id='container-discover' class='mui-container-fluid'>
+      <div v-if='state === "discovery"'>
+        <h5>
+          Discovering accessories on your local network<span class='loader__dot'>.</span><span class='loader__dot'>.</span><span class='loader__dot'>.</span>😎
+        </h5>
+      </div>
+      <div v-if='state === "error"'>
+
+        <div class="fluid card error">
+          <div class='section'>
+            <h5>Discovery failed 😫</h5>
+            <p>{{ error }}</p>
+          </div>
+        </div>
+
+      </div>
+      <div v-if='state === "no-accessories-found"'>
+
+        <div class="fluid card warning">
+          <div class='section'>
+            <h5>No (new) accessories were found ☹️</h5>
+          </div>
+        </div>
+
+      </div>
+      <div v-if='state === "accessories-found"'>
+
+        <div class='mui-panel accessory-panel' v-for='accessory in accessories'>
+          <form class='mui-form'>
+            <legend>{{ accessory.name }}</legend>
+            <div class='mui-textfield'>
+              <input type='text' disabled :value='accessory.id'>
+              <label>ID</label>
+            </div>
+            <div class='mui-textfield'>
+              <input type='text' disabled :value='accessory.addresses.map(a => `${ a.address }:${ a.port }`).join(", ")'>
+              <label>Address{{ accessory.addresses.length > 1 ? 'es' : '' }}</label>
+            </div>
+            <div class='mui-textfield'>
+              <input type='text' disabled :value='accessory.category'>
+              <label>Category</label>
+            </div>
+            <div>
+              <span   
+                v-if  = 'accessory.isPaired'
+                style = 'float: right'>Already paired</span>
+              <button 
+                v-else                    
+                class          = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
+                style          = 'float: right'
+                @click.prevent = 'setPairingTarget(accessory)'>Click to pair</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </body>
+  <script>
+    if (! window.Homey) {
+      Homey = {
+        emit() {},
+        on(key, cb) {
+          cb({"name":"TRADFRI gateway","address":"192.168.23.102","port":80,"id":"3E:57:8F:93:50:78","configurationNumber":237,"featureFlags":1,"modelName":"TRADFRI gateway","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"});
+          cb({"name":"Homey","address":"192.168.23.8","port":51826,"id":"CC:22:3D:E3:CE:F6","configurationNumber":421,"featureFlags":0,"modelName":"Homey","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"});
+        },
+      }
+    }
+    new Vue({
+      el   : '#container-discover',
+      data : {
+        state:       'discovery',
+        accessories: [],
+      },
+      mounted() {
+        // TODO: timeout.
+        Homey.emit('startDiscovery');
+        Homey.on('accessoryFound', accessory => {
+          console.log('Got accessory:', accessory);
+          this.state = 'accessories-found';
+
+          // Accessory address object.
+          const address = {
+            address: accessory.address,
+            port:    accessory.port,
+          };
+
+          // Check if we already have a reference to this accessory.
+          // If so, add the address to the list of addresses.
+          let existing = this.accessories.find(a => a.id === accessory.id);
+          if (existing) {
+            existing.addresses.push(address);
+          } else {
+            accessory.addresses = [ address ];
+            this.accessories.push(accessory);
+          }
+        });
+      },
+      methods : {
+        setPairingTarget(accessory) {
+          Homey.emit('setPairingTarget', accessory.id, () => {
+            Homey.showView('pair-setup');
+          });
+        }
+      }
+    });
+  </script>
+</html>

@@ -1,5 +1,4 @@
-env.json
-temp
+debugging
 mapping
 !node_modules
 *.sw?

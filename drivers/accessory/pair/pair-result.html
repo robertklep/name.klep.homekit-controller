@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='assets/mui.min.css'>
+    <link rel='stylesheet' href='assets/style.css'>
+    <script src='assets/vue.min.js'></script>
+  </head>
+  <body class='homekit-client'>
+    <div id='container-pair-result' class='mui-container-fluid'>
+      <div v-if='accessory' class='mui-panel'>
+        <h1>Pairing successful!</h1>
+        <p>
+         The HomeKit accessory has now been added to Homey!
+        </p>
+        <p>
+          If it's a bridge/hub, you can now start adding its devices to Homey separately.
+        </p>
+        <p>
+          <button @click='Homey.done()' class='mui-btn mui-btn--small mui-btn--primary mui-btn--raised'>Done</button>
+        </p>
+      </div>
+      <div v-else>
+        <div class='spinner'></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    if (! window.Homey) {
+      Homey = {
+        emit(d, data, cb) {
+          cb(null, {"name":"TRADFRI gateway","address":"192.168.23.102","port":80,"c#":237,"ff":1,"id":"3E:57:8F:93:50:78","md":"TRADFRI gateway","pv":"1.0","s#":1,"sf":0,"ci":2});
+        },
+      }
+    }
+    new Vue({
+      el:      '#container-pair-result',
+      data:    {
+        accessory: null,
+      },
+      mounted() {
+        Homey.emit('getPairingTarget', null, (err, accessory) => {
+          console.log('Got pairing target:', accessory);
+          this.accessory = accessory;
+        });
+      },
+    });
+  </script>
+</html>
+

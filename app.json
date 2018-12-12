@@ -12,7 +12,7 @@
   "category": [
     "tools"
   ],
-  "permissions": [],
+  "permissions": [ "homey:manager:api" ],
   "images": {
     "large": "/assets/images/large.png",
     "small": "/assets/images/small.png"
@@ -20,5 +20,48 @@
   "author": {
     "name": "Robert Klep",
     "email": "robert@klep.name"
-  }
+  },
+  "drivers" : [
+    {
+      "id": "accessory",
+      "class": "other",
+      "capabilities" : [],
+      "name": {
+        "en": "Accessory"
+      },
+      "images": {
+        "large": "drivers/accessory/assets/images/large.png",
+        "small": "drivers/accessory/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "discover"
+        },
+        {
+          "id": "pair-setup"
+        },
+        {
+          "id": "pair-result"
+        }
+      ]
+    },
+    {
+      "id": "device",
+      "class": "other",
+      "capabilities" : [],
+      "name": {
+        "en": "Device",
+        "nl": "Apparaat"
+      },
+      "images": {
+        "large": "drivers/device/assets/images/large.png",
+        "small": "drivers/device/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ]
+    }
+  ]
 }
