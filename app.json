@@ -1,0 +1,24 @@
+{
+  "id": "name.klep.homekit-client",
+  "version": "1.0.0",
+  "compatibility": "^1.5.0",
+  "sdk": 2,
+  "name": {
+    "en": "HomeKit Client"
+  },
+  "description": {
+    "en": "Allow Homey to control HomeKit-enabled devices"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Robert Klep",
+    "email": "robert@klep.name"
+  }
+}

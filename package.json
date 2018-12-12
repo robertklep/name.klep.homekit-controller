@@ -1,0 +1,7 @@
+{
+  "name": "name.klep.homekit-client",
+  "version": "1.0.0",
+  "description": "Allow Homey to control HomeKit-enabled devices",
+  "author": "Robert Klep <robert@klep.name>",
+  "license": "MIT"
+}
