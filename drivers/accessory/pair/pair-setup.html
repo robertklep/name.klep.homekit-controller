@@ -5,24 +5,18 @@
     <link rel='stylesheet' href='assets/mui.min.css'>
     <link rel='stylesheet' href='assets/style.css'>
     <script src='assets/vue.min.js'></script>
+    <script src='assets/homey-pairing-mock.js'></script>
+    <script src='assets/mock-setup.js'></script>
   </head>
   <body class='homekit-client'>
     <div id='container-pair-setup' class='mui-container-fluid'>
       <div v-if='accessory' class='mui-panel'>
         <h3>Pair with <i>{{ accessory.name }}</i></h3>
         <p>
-          Pairing means that Homey and <i>{{ accessory.name }}</i> exchange pleasanteries, after which Homey is allowed to control <i>{{ accessory.name }}</i>.
-        </p>
-        <p>
-          This is only the first step of the process. If <i>{{ accessory.name }}</i> is a bridge device (often called a "hub"), it typically controls multiple devices itself.
-          So first, we will add <i>{{ accessory.name }}</i> as a device. Once that has succeeded, and if <i>{{ accessory.name }}</i> is a bridge device, you can then
-          add the individual devices to Homey.
-        </p>
-        <p>
           Before <i>{{ accessory.name }}</i> will accept anything from Homey, it requires that Homey sends the HomeKit Setup Code. This code is generally
           found on a sticker on the device, and looks something like this:
         </p>
-        <img src='assets/setup-code.png' style='display: block; margin: 0 auto;'>
+        <img src='assets/setup-code.png' style='display: block; margin: 10px auto; width: 100%; max-width: 360px'>
         <p>
           Please find the setup code for <i>{{ accessory.name }}</i> and enter it here:<br>
         </p>
@@ -48,13 +42,6 @@
     </div>
   </body>
   <script>
-    if (! window.Homey) {
-      Homey = {
-        emit(d, data, cb) {
-          cb(null, {"name":"TRADFRI gateway","address":"192.168.23.102","port":80,"c#":237,"ff":1,"id":"3E:57:8F:93:50:78","md":"TRADFRI gateway","pv":"1.0","s#":1,"sf":0,"ci":2});
-        },
-      }
-    }
     new Vue({
       el:      '#container-pair-setup',
       data:    {

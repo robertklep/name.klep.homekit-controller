@@ -4,16 +4,15 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' href='assets/mui.min.css'>
     <link rel='stylesheet' href='assets/style.css'>
-    <!--
-    <script src='https://cdn.muicss.com/mui-0.9.41/js/mui.min.js'></script>
-    -->
     <script src='assets/vue.min.js'></script>
+    <script src='assets/homey-pairing-mock.js'></script>
+    <script src='assets/mock-setup.js'></script>
   </head>
   <body class='homekit-client'>
     <div id='container-discover' class='mui-container-fluid'>
       <div v-if='state === "discovery"'>
         <h5>
-          Discovering accessories on your local network<span class='loader__dot'>.</span><span class='loader__dot'>.</span><span class='loader__dot'>.</span>😎
+          Discovering HomeKit bridges on your local network<span class='loader__dot'>.</span><span class='loader__dot'>.</span><span class='loader__dot'>.</span>
         </h5>
       </div>
       <div v-if='state === "error"'>
@@ -48,16 +47,14 @@
               <input type='text' disabled :value='accessory.addresses.map(a => `${ a.address }:${ a.port }`).join(", ")'>
               <label>Address{{ accessory.addresses.length > 1 ? 'es' : '' }}</label>
             </div>
-            <div class='mui-textfield'>
-              <input type='text' disabled :value='accessory.category'>
-              <label>Category</label>
-            </div>
             <div>
-              <span   
+              <button
                 v-if  = 'accessory.isPaired'
-                style = 'float: right'>Already paired</span>
-              <button 
-                v-else                    
+                class = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
+                style = 'float: right'
+                disabled>Already paired</button>
+              <button
+                v-else
                 class          = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
                 style          = 'float: right'
                 @click.prevent = 'setPairingTarget(accessory)'>Click to pair</button>
@@ -69,15 +66,6 @@
     </div>
   </body>
   <script>
-    if (! window.Homey) {
-      Homey = {
-        emit() {},
-        on(key, cb) {
-          cb({"name":"TRADFRI gateway","address":"192.168.23.102","port":80,"id":"3E:57:8F:93:50:78","configurationNumber":237,"featureFlags":1,"modelName":"TRADFRI gateway","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"});
-          cb({"name":"Homey","address":"192.168.23.8","port":51826,"id":"CC:22:3D:E3:CE:F6","configurationNumber":421,"featureFlags":0,"modelName":"Homey","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"});
-        },
-      }
-    }
     new Vue({
       el   : '#container-discover',
       data : {
