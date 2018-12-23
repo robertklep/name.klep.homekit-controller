@@ -1,4 +1,4 @@
-const { HttpClient } = require('../modules/hap-controller');
+const { HttpClient } = require('../../../modules/hap-controller');
 
 const CATEGORIES = {
   1: 'Other', 2: 'Bridge', 3: 'Fan', 4: 'Garage',

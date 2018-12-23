@@ -1,0 +1,76 @@
+@keyframes blink          { 50% { color: transparent } }
+.loader__dot              { animation: 1s blink infinite }
+.loader__dot:nth-child(2) { animation-delay: 250ms }
+.loader__dot:nth-child(3) { animation-delay: 500ms }
+
+.mui-container, .mui-container-fluid {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.homekit-client table caption {
+  font-size:   150%;
+  text-align:  center;
+  font-weight: 500;
+  margin-top:  0;
+}
+
+.homekit-client .accessory-panel {
+  border: 1px solid #aaa;
+}
+
+.homekit-client .accessory-panel legend {
+  background: #2196F3;
+  color:      white;
+  padding:    0.5em;
+}
+
+.homekit-client input:invalid {
+  color: #D8000C;
+  background: #FFBABA;
+}
+
+.homekit-client input:valid {
+  color: #4F8A10;
+  background: #DFF2BF;
+}
+
+/* https://loading.io/css/ */
+.homekit-client .spinner {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+}
+
+.homekit-client .spinner.small {
+  height: 20px;
+  vertical-align: middle;
+}
+
+.homekit-client .spinner:after {
+  content: " ";
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #aaa;
+  border-color: #aaa transparent #aaa transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+.homekit-client .spinner.small:after {
+  width: 16px;
+  height: 16px;
+  border-width: 3px;
+  margin: 0;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

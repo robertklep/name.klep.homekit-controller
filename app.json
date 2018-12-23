@@ -46,20 +46,20 @@
       ]
     },
     {
-      "id": "device",
+      "id": "bridged-accessory",
       "class": "other",
       "capabilities" : [],
       "name": {
-        "en": "Device",
-        "nl": "Apparaat"
+        "en": "Bridged Accessory",
+        "nl": "Bridged Accessoire"
       },
       "images": {
-        "large": "drivers/device/assets/images/large.png",
-        "small": "drivers/device/assets/images/small.png"
+        "large": "drivers/bridged-accessory/assets/images/large.png",
+        "small": "drivers/bridged-accessory/assets/images/small.png"
       },
       "pair": [
         {
-          "id": "start"
+          "id": "discover"
         }
       ]
     }

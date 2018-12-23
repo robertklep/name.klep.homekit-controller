@@ -1,6 +1,6 @@
 const Homey           = require('homey');
-const { IPDiscovery } = require('../modules/hap-controller');
-const { Device }      = require('../lib');
+const { Device }      = require('./lib');
+const { IPDiscovery } = require('../../modules/hap-controller');
 
 module.exports = class BaseDriver extends Homey.Driver {
 
