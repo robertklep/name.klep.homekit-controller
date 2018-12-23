@@ -1,8 +1,13 @@
 const Homey           = require('homey');
-const { IPDiscovery } = require('../../modules/hap-controller');
-const { Device }      = require('../../lib');
+const { IPDiscovery } = require('../modules/hap-controller');
+const { Device }      = require('../lib');
 
-module.exports = class AccessoryDriver extends Homey.Driver {
+module.exports = class BaseDriver extends Homey.Driver {
+
+  // Should be overloaded by specific driver.
+  isAcceptableDevice() {
+    return false;
+  }
 
   onPair(socket) {
     let discoveredDevices = {};
@@ -14,6 +19,8 @@ module.exports = class AccessoryDriver extends Homey.Driver {
       const discovery = new IPDiscovery();
       discovery.on('serviceUp', accessory => {
         const device = Device.fromJSON(accessory);
+        if (! this.isAcceptableDevice(device)) return;
+
         discoveredDevices[device.id] = device;
 
         this.log('  - got accessory:', accessory.name);
@@ -56,3 +63,4 @@ module.exports = class AccessoryDriver extends Homey.Driver {
   }
 
 };
+

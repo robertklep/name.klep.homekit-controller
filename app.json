@@ -23,15 +23,15 @@
   },
   "drivers" : [
     {
-      "id": "accessory",
+      "id": "bridge",
       "class": "other",
       "capabilities" : [],
       "name": {
-        "en": "Accessory"
+        "en": "Bridge"
       },
       "images": {
-        "large": "drivers/accessory/assets/images/large.png",
-        "small": "drivers/accessory/assets/images/small.png"
+        "large": "drivers/bridge/assets/images/large.png",
+        "small": "drivers/bridge/assets/images/small.png"
       },
       "pair": [
         {
