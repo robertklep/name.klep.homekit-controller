@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='../../../assets/base-driver/mustard-ui.css'>
+    <link rel='stylesheet' href='../../../assets/base-driver/style.css'>
+    <script src='../../../assets/base-driver/vue.min.js'></script>
+    <script src='../../../assets/base-driver/homey-pairing-mock.js'></script>
+    <script src='assets/mock-setup.js'></script>
+  </head>
+  <body class='homekit-client'>
+    <div id='container-discover' class='panel'>
+      <div v-if='bridges === null'>
+        <div class='panel-head'>
+          <p class='panel-title'>
+            Finding HomeKit bridges<span class='loader__dot'>.</span><span class='loader__dot'>.</span><span class='loader__dot'>.</span>
+          </p>
+        </div>
+      </div>
+      <div v-else-if='Array.isArray(bridges) && bridges.length === 0'>
+        <div class='panel-head'>
+          <p class='panel-title'>No bridges paired yet</p>
+        </div>
+        <div class='panel-body'>
+          <p>Before you can add a bridged accessory, you need to at least pair one bridge device first.</p>
+        </div>
+        <div class='panel-footer align-center'>
+          <button class='button button-primary' @click='Homey.done()'>Close</button>
+        </div>
+      </div>
+      <div v-else>
+        <div class='panel-head'>
+          <p class='panel-title'>Select a Bridge:</p>
+        </div>
+        <div class='pricing-table row'>
+          <div v-for='bridge in bridges' class='col col-md-6'>
+            <div class='package row'>
+              <div class='package-name'>{{ bridge.name }}</div>
+              <hr>
+              <p class='price'>{{ bridge.id }}</p>
+              <p class='disclaimer'></p>
+              <hr>
+              <ul class='features'>
+                <li>{{ bridge.address }}</li>
+              </ul>
+              <!-- TODO: number of devices -->
+              <div class='col col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3'>
+                <button style='width:100%' class='button-primary button-small button-shadow' @click='selectBridge(bridge.id)'>Select</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    new Vue({
+      el   : '#container-discover',
+      data : {
+        state:    'finding-bridge',
+        bridges:  null,
+      },
+      mounted() {
+        Homey.emit('getBridges', (err, bridges) => {
+          this.bridges = bridges;
+        });
+      },
+      methods : {
+        selectBridge(id) {
+          console.log('selected', id);
+        }
+      }
+    });
+  </script>
+</html>

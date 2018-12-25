@@ -2,39 +2,50 @@
 <html>
   <head>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='assets/mui.min.css'>
-    <link rel='stylesheet' href='assets/style.css'>
-    <script src='assets/vue.min.js'></script>
-    <script src='assets/homey-pairing-mock.js'></script>
+    <link rel='stylesheet' href='../../../assets/base-driver/mustard-ui.css'>
+    <link rel='stylesheet' href='../../../assets/base-driver/style.css'>
+    <script src='../../../assets/base-driver/vue.min.js'></script>
+    <script src='../../../assets/base-driver/homey-pairing-mock.js'></script>
     <script src='assets/mock-setup.js'></script>
   </head>
   <body class='homekit-client'>
-    <div id='container-pair-setup' class='mui-container-fluid'>
-      <div v-if='accessory' class='mui-panel'>
-        <h3>Pair with <i>{{ accessory.name }}</i></h3>
-        <p>
-          Before <i>{{ accessory.name }}</i> will accept anything from Homey, it requires that Homey sends the HomeKit Setup Code. This code is generally
-          found on a sticker on the device, and looks something like this:
-        </p>
-        <img src='assets/setup-code.png' style='display: block; margin: 10px auto; width: 100%; max-width: 360px'>
-        <p>
-          Please find the setup code for <i>{{ accessory.name }}</i> and enter it here:<br>
-        </p>
-        <form class='mui-form--inline'>
-          <div class='mui-textfield'>
-            <input
-              v-model     = pin
-              type        = text
-              placeholder = 'XXX-XX-XXX'
-              pattern     = '^[0-9]{3}-[0-9]{2}-[0-9]{3}$'
-              required></input>
+    <div id='container-pair-setup'>
+      <div v-if='accessory' class='panel'>
+        <div class='panel-head'>
+          <p class='panel-title'>Pair with <i>{{ accessory.name }}</i></p>
+        </div>
+        <div class='panel-body row'>
+          <div class='col col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4'>
+            Before <i>{{ accessory.name }}</i> will accept anything from Homey, it requires that Homey sends the HomeKit Setup Code. This code is generally
+            found on a sticker on the device, and looks something like this:
+            <img src='assets/setup-code.png' style='display: block; margin: 10px auto; width: 100%; max-width: 360px'>
+            Please find the setup code for <i>{{ accessory.name }}</i> and enter it here:<br>
+            <div class='row'>
+              <div class='form-control col col-xs-8'>
+                <input
+                  v-model     = pin
+                  type        = text
+                  placeholder = 'XXX-XX-XXX'
+                  pattern     = '^[0-9]{3}-[0-9]{2}-[0-9]{3}$'
+                  required></input>
+              </div>
+              <div class='form-control col col-xs-4'>
+                <button
+                  :class         = '{ 
+                    "button-primary"          : ! isPairing,
+                    "button-primary-outlined" :   isPairing,
+                    "button-shadow"           :   true
+                  }'
+                  style          = 'width:100%'
+                  :disabled      = '! validPin || isPairing'
+                  @click.prevent = 'startPairingProcess()'>
+                    <div class='spinner small' v-if='isPairing'></div>
+                    <span v-else>Pair</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <button
-            class          = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
-            :disabled      = '! validPin || isPairing'
-            @click.prevent = 'startPairingProcess()'>Start pairing</button>
-          <div class='spinner small' v-if='isPairing'></div>
-        </form>
+        </div>
       </div>
       <div v-else>
         <div class='spinner'></div>

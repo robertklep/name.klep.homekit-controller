@@ -3,9 +3,17 @@
 .loader__dot:nth-child(2) { animation-delay: 250ms }
 .loader__dot:nth-child(3) { animation-delay: 500ms }
 
-.mui-container, .mui-container-fluid {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.homekit-client .panel-head {
+  justify-content: center;
+}
+
+.homekit-client .panel {
+  margin-top: 0;
+}
+
+.homekit-client .pricing-table .package {
+  padding: 15px;
+  margin: 0;
 }
 
 .homekit-client table caption {
@@ -63,7 +71,7 @@
   width: 16px;
   height: 16px;
   border-width: 3px;
-  margin: 0;
+  margin: 0 auto;
 }
 
 @keyframes lds-dual-ring {

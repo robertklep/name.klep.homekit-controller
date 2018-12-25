@@ -2,64 +2,65 @@
 <html>
   <head>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='../../../assets/base-driver/mui.min.css'>
+    <link rel='stylesheet' href='../../../assets/base-driver/mustard-ui.css'>
     <link rel='stylesheet' href='../../../assets/base-driver/style.css'>
     <script src='../../../assets/base-driver/vue.min.js'></script>
     <script src='../../../assets/base-driver/homey-pairing-mock.js'></script>
     <script src='assets/mock-setup.js'></script>
   </head>
   <body class='homekit-client'>
-    <div id='container-discover' class='mui-container-fluid'>
+    <div id='container-discover' class='panel'>
       <div v-if='state === "discovery"'>
-        <h5>
-          Discovering HomeKit bridges on your local network<span class='loader__dot'>.</span><span class='loader__dot'>.</span><span class='loader__dot'>.</span>
-        </h5>
+        <div class='panel-head'>
+          <p class='panel-title'>
+            Discovering unpaired HomeKit bridges<span class='loader__dot'>.</span><span class='loader__dot'>.</span><span class='loader__dot'>.</span>
+          </p>
+        </div>
       </div>
-      <div v-if='state === "error"'>
+      <div v-if='state === "no-bridges-found"'>
 
-        <div class="fluid card error">
-          <div class='section'>
-            <h5>Discovery failed 😫</h5>
-            <p>{{ error }}</p>
-          </div>
+        <div class='panel-head'>
+          <p class='panel-title'>No bridges found</p>
+        </div>
+        <div class='panel-body'>
+          <p>I wasn't able to find any new HomeKit bridges in your local network yet.</p>
+          <p>You can wait a bit longer, or click "Close" to cancel the discovery process.</p>
+        </div>
+        <div class='panel-footer align-center'>
+          <button class='button button-primary' @click='Homey.done()'>Close</button>
         </div>
 
       </div>
-      <div v-if='state === "no-accessories-found"'>
-
-        <div class="fluid card warning">
-          <div class='section'>
-            <h5>No (new) accessories were found ☹️</h5>
-          </div>
+      <div v-if='state === "bridges-found"'>
+        <div class='panel-head'>
+          <p class='panel-title'>Bridges found:</p>
         </div>
 
-      </div>
-      <div v-if='state === "accessories-found"'>
-
-        <div class='mui-panel accessory-panel' v-for='accessory in accessories'>
-          <form class='mui-form'>
-            <legend>{{ accessory.name }}</legend>
-            <div class='mui-textfield'>
-              <input type='text' disabled :value='accessory.id'>
-              <label>ID</label>
+        <div class='pricing-table row'>
+          <div v-for='bridge in bridges' class='col col-md-6'>
+            <div class='package row'>
+              <div class='package-name'>{{ bridge.name }}</div>
+              <hr>
+              <p class='price'>{{ bridge.id }}</p>
+              <p class='disclaimer'></p>
+              <hr>
+              <ul class='features'>
+                <li v-for='address in bridge.addresses'>
+                  {{ address.address }}:{{ address.port }}
+                </li>
+              </ul>
+              <div class='col col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3'>
+                <button
+                  v-if  = 'bridge.isPaired'
+                  class = 'button-small button-shadow button-info'
+                  disabled>Already paired</button>
+                <button
+                  v-else
+                  class          = 'button-small button-shadow button-primary'
+                  @click.prevent = 'setPairingTarget(bridge)'>Click to pair</button>
+              </div>
             </div>
-            <div class='mui-textfield'>
-              <input type='text' disabled :value='accessory.addresses.map(a => `${ a.address }:${ a.port }`).join(", ")'>
-              <label>Address{{ accessory.addresses.length > 1 ? 'es' : '' }}</label>
-            </div>
-            <div>
-              <button
-                v-if  = 'accessory.isPaired'
-                class = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
-                style = 'float: right'
-                disabled>Already paired</button>
-              <button
-                v-else
-                class          = 'mui-btn mui-btn--small mui-btn--primary mui-btn--raised'
-                style          = 'float: right'
-                @click.prevent = 'setPairingTarget(accessory)'>Click to pair</button>
-            </div>
-          </form>
+          </div>
         </div>
 
       </div>
@@ -69,36 +70,37 @@
     new Vue({
       el   : '#container-discover',
       data : {
-        state:       'discovery',
-        accessories: [],
+        state:   'discovery',
+        bridges: [],
       },
       mounted() {
-        // TODO: timeout.
+        const timeout = setTimeout(() => { this.state = 'no-bridges-found' }, 5000);
         Homey.emit('startDiscovery');
-        Homey.on('accessoryFound', accessory => {
-          console.log('Got accessory:', accessory);
-          this.state = 'accessories-found';
+        Homey.on('accessoryFound', bridge => {
+          clearTimeout(timeout);
+          console.log('Got bridge:', bridge);
+          this.state = 'bridges-found';
 
-          // Accessory address object.
+          // Bridge address object.
           const address = {
-            address: accessory.address,
-            port:    accessory.port,
+            address: bridge.address,
+            port:    bridge.port,
           };
 
-          // Check if we already have a reference to this accessory.
+          // Check if we already have a reference to this bridge.
           // If so, add the address to the list of addresses.
-          let existing = this.accessories.find(a => a.id === accessory.id);
+          let existing = this.bridges.find(a => a.id === bridge.id);
           if (existing) {
             existing.addresses.push(address);
           } else {
-            accessory.addresses = [ address ];
-            this.accessories.push(accessory);
+            bridge.addresses = [ address ];
+            this.bridges.push(bridge);
           }
         });
       },
       methods : {
-        setPairingTarget(accessory) {
-          Homey.emit('setPairingTarget', accessory.id, () => {
+        setPairingTarget(bridge) {
+          Homey.emit('setPairingTarget', bridge.id, () => {
             Homey.showView('pair-setup');
           });
         }

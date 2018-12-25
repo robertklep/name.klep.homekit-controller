@@ -2,23 +2,27 @@
 <html>
   <head>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='assets/mui.min.css'>
-    <link rel='stylesheet' href='assets/style.css'>
-    <script src='assets/vue.min.js'></script>
+    <link rel='stylesheet' href='../../../assets/base-driver/mustard-ui.css'>
+    <link rel='stylesheet' href='../../../assets/base-driver/style.css'>
+    <script src='../../../assets/base-driver/vue.min.js'></script>
+    <script src='../../../assets/base-driver/homey-pairing-mock.js'></script>
+    <script src='assets/mock-setup.js'></script>
   </head>
   <body class='homekit-client'>
-    <div id='container-pair-result' class='mui-container-fluid'>
-      <div v-if='accessory' class='mui-panel'>
-        <h1>Pairing successful!</h1>
-        <p>
-         The HomeKit accessory has now been added to Homey!
-        </p>
-        <p>
-          If it's a bridge/hub, you can now start adding its devices to Homey separately.
-        </p>
-        <p>
-          <button @click='Homey.done()' class='mui-btn mui-btn--small mui-btn--primary mui-btn--raised'>Done</button>
-        </p>
+    <div id='container-pair-result'>
+      <div v-if='bridge' class='panel'>
+        <div class='panel-head'>
+          <p class='panel-title'>Pairing successful!</p>
+        </div>
+        <div class='panel-body row'>
+          <div class='col col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4'>
+            A new HomeKit bridge has now been added to Homey!
+            You can now start adding its bridged devices to Homey separately.
+          </div>
+        </div>
+        <div class='panel-footer align-center'>
+          <button @click='Homey.done()' class='button button-primary button-small button-shadow'>Done</button>
+        </div>
       </div>
       <div v-else>
         <div class='spinner'></div>
@@ -26,22 +30,13 @@
     </div>
   </body>
   <script>
-    if (! window.Homey) {
-      Homey = {
-        emit(d, data, cb) {
-          cb(null, {"name":"TRADFRI gateway","address":"192.168.23.102","port":80,"c#":237,"ff":1,"id":"3E:57:8F:93:50:78","md":"TRADFRI gateway","pv":"1.0","s#":1,"sf":0,"ci":2});
-        },
-      }
-    }
     new Vue({
       el:      '#container-pair-result',
-      data:    {
-        accessory: null,
-      },
+      data:    { bridge: null },
       mounted() {
-        Homey.emit('getPairingTarget', null, (err, accessory) => {
-          console.log('Got pairing target:', accessory);
-          this.accessory = accessory;
+        Homey.emit('getPairingTarget', null, (err, bridge) => {
+          console.log('Got pairing target:', bridge);
+          this.bridge = bridge;
         });
       },
     });

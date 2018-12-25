@@ -2,7 +2,7 @@
 void function() {
   if (! Homey.isMock) return;
 
-  const BASE_TIMEOUT = 1000;
+  const BASE_TIMEOUT = 0;
   const MOCK_DEVICES = [
     {"name":"TRADFRI gateway", isPaired: true, "address":"192.168.1.100","port":80,"id":"31:33:70:31:33:70","configurationNumber":123,"featureFlags":1,"modelName":"TRADFRI gateway","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"},
     {"name":"Homey","address":"192.168.1.105","port":51826,"id":"CC:22:CC:22:CC:22","configurationNumber":39,"featureFlags":0,"modelName":"Homey","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"},
