@@ -5,7 +5,6 @@
   "author": "Robert Klep <robert@klep.name>",
   "license": "MIT",
   "dependencies": {
-    "homey-app-upload-lib": "^1.1.0",
     "homey-log": "^1.0.6"
   }
 }
