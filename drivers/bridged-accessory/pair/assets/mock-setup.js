@@ -6,8 +6,14 @@ void function() {
     {"name":"Homey","address":"192.168.1.105","port":51826,"id":"CC:22:CC:22:CC:22","configurationNumber":39,"featureFlags":0,"modelName":"Homey","protocolVersion":"1.0","state":1,"statusFlags":0,"categoryIdentifier":2,"category":"Bridge"},
   ];
 
+  const ACCESSORIES = [];
+
   Homey.registerEmitHandler('getBridges', (ev, cb) => {
     setTimeout(() => cb(null, Object.assign([], BRIDGES)), 1000);
+  });
+
+  Homey.registerEmitHandler('getAccessories', (ev, id, cb) => {
+    setTimeout(() => cb(null, Object.assign([], ACCESSORIES)), 1000);
   });
 
 }();

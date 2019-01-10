@@ -4,11 +4,12 @@ const BaseDriver = require('../base-driver/driver');
 module.exports = class BridgedAccessoryDriver extends BaseDriver {
 
   onPair(socket) {
-    socket.on('getBridges', (data, cb) => {
-      // Retrieve paired bridges.
-      const driver = Homey.ManagerDrivers.getDriver('bridge');
+    const driver = Homey.ManagerDrivers.getDriver('bridge');
 
-      cb(null, driver.getDevices());
+    socket.on('getBridges', (data, cb) => {
+      // Retrieve paired bridges from driver and pass the contents of their
+      // store (which contains all relevant information for display purposes).
+      cb(null, driver.getDevices().map(d => d.getStore()));
     });
     return super.onPair(socket);
   }

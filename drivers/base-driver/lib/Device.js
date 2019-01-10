@@ -45,8 +45,9 @@ const Device = module.exports = class Device {
       if (! e) {
         throw unknownError;
       } 
-      if (e.message.includes('Error: ')) {
-        const errorCode = (e.message.match(/Error: (\d+)/) || [])[0];
+      if (e instanceof Error) e = e.message;
+      if (e.includes('Error: ')) {
+        const errorCode = (e.match(/Error: (\d+)/) || [])[0];
         if (errorCode in PAIRING_ERRORS) {
           throw Error(PAIRING_ERRORS[errorCode]);
         }

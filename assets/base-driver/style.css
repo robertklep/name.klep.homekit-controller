@@ -34,13 +34,13 @@
 }
 
 .homekit-client input:invalid {
-  color: #D8000C;
-  background: #FFBABA;
+  color: #D8000C !important;
+  background: #FFBABA !important;
 }
 
 .homekit-client input:valid {
-  color: #4F8A10;
-  background: #DFF2BF;
+  color: #4F8A10 !important;
+  background: #DFF2BF !important;
 }
 
 /* https://loading.io/css/ */
