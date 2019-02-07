@@ -36,9 +36,10 @@ if (! window.Homey) {
     }
 
     // Regular API.
-    emit(event, data, cb) {
+    emit(event, ...args) {
+      const [ data, callback ] = args.length >= 2 ? args : [ {}, args[0] ];
       let handler = this.emitHandlers[event];
-      handler && handler(event, data, cb);
+      handler && handler(event, data, callback);
     }
 
     on(event, cb) {

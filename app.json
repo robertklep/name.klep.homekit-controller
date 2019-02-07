@@ -23,43 +23,26 @@
   },
   "drivers" : [
     {
-      "id": "bridge",
+      "id": "accessory",
       "class": "other",
       "capabilities" : [],
       "name": {
-        "en": "Bridge"
+        "en": "Accessory",
+        "nl": "Accessoire"
       },
       "images": {
-        "large": "drivers/bridge/assets/images/large.png",
-        "small": "drivers/bridge/assets/images/small.png"
+        "large": "drivers/accessory/assets/images/large.png",
+        "small": "drivers/accessory/assets/images/small.png"
       },
       "pair": [
         {
           "id": "discover"
         },
         {
-          "id": "pair-setup"
+          "id": "pair"
         },
         {
-          "id": "pair-result"
-        }
-      ]
-    },
-    {
-      "id": "bridged-accessory",
-      "class": "other",
-      "capabilities" : [],
-      "name": {
-        "en": "Bridged Accessory",
-        "nl": "Bridged Accessoire"
-      },
-      "images": {
-        "large": "drivers/bridged-accessory/assets/images/large.png",
-        "small": "drivers/bridged-accessory/assets/images/small.png"
-      },
-      "pair": [
-        {
-          "id": "pair"
+          "id": "select"
         }
       ]
     }

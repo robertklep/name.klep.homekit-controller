@@ -18,7 +18,7 @@ const PAIRING_ERRORS = {
   0x07 : 'Busy Error',
 };
 
-const Device = module.exports = class Device {
+const Accessory = module.exports = class Accessory {
   constructor(data) {
     this.name                = data.name;
     this.address             = data.address;
@@ -40,11 +40,15 @@ const Device = module.exports = class Device {
       this.pairingData = client.getLongTermData();
       console.log('pairing data', this.pairingData);
     }).catch(e => {
-      const unknownError = Error('Unknown error (device already paired?)');
+      e = e || Error(PAIRING_ERRORS[0x01]);
+      console.log('pairing error', e);
+      throw e;
+      /*
+      const unknownError = Error('Unknown error (accessory already paired?)');
 
       if (! e) {
         throw unknownError;
-      } 
+      }
       if (e instanceof Error) e = e.message;
       if (e.includes('Error: ')) {
         const errorCode = (e.match(/Error: (\d+)/) || [])[0];
@@ -54,6 +58,7 @@ const Device = module.exports = class Device {
         throw unknownError;
       }
       throw e;
+      */
     });
   }
 
@@ -67,4 +72,4 @@ const Device = module.exports = class Device {
   }
 }
 
-Device.fromJSON = json => new Device(json);
+Accessory.fromJSON = json => new Accessory(json);
