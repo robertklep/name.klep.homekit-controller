@@ -1,4 +1,4 @@
-# HomeKit Client
+# HomeKit Controller
 
 Allow Homey to control HomeKit-enabled devices.
 
