@@ -3,59 +3,59 @@
 .loader__dot:nth-child(2) { animation-delay: 250ms }
 .loader__dot:nth-child(3) { animation-delay: 500ms }
 
-.homekit-client .panel-head {
+.homekit-controller .panel-head {
   justify-content: center;
 }
 
-.homekit-client .panel {
+.homekit-controller .panel {
   margin-top: 0;
 }
 
-.homekit-client .pricing-table .package {
+.homekit-controller .pricing-table .package {
   padding: 15px;
   margin: 0;
 }
 
-.homekit-client table caption {
+.homekit-controller table caption {
   font-size:   150%;
   text-align:  center;
   font-weight: 500;
   margin-top:  0;
 }
 
-.homekit-client .accessory-panel {
+.homekit-controller .accessory-panel {
   border: 1px solid #aaa;
 }
 
-.homekit-client .accessory-panel legend {
+.homekit-controller .accessory-panel legend {
   background: #2196F3;
   color:      white;
   padding:    0.5em;
 }
 
-.homekit-client input:invalid {
+.homekit-controller input:invalid {
   color: #D8000C !important;
   background: #FFBABA !important;
 }
 
-.homekit-client input:valid {
+.homekit-controller input:valid {
   color: #4F8A10 !important;
   background: #DFF2BF !important;
 }
 
 /* https://loading.io/css/ */
-.homekit-client .spinner {
+.homekit-controller .spinner {
   display: inline-block;
   width: 64px;
   height: 64px;
 }
 
-.homekit-client .spinner.small {
+.homekit-controller .spinner.small {
   height: 20px;
   vertical-align: middle;
 }
 
-.homekit-client .spinner:after {
+.homekit-controller .spinner:after {
   content: " ";
   display: block;
   width: 46px;
@@ -67,7 +67,7 @@
   animation: lds-dual-ring 1.2s linear infinite;
 }
 
-.homekit-client .spinner.small:after {
+.homekit-controller .spinner.small:after {
   width: 16px;
   height: 16px;
   border-width: 3px;
