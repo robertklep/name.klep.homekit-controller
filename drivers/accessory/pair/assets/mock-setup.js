@@ -27,10 +27,9 @@ void function() {
     if (id) {
       selectedAccessory = MOCK_ACCESSORIES.find(accessory => accessory.id === id);
       callback();
-    } else if (! selectedAccessory) {
-      return callback(new Error('NO_SELECTED_ACCESSORY'));
     } else {
-      return callback(null, selectedAccessory);
+      // Pick first accessory if none is set.
+      return callback(null, selectedAccessory || MOCK_ACCESSORIES.find(device => device.isPaired));
     }
   });
 
@@ -43,6 +42,10 @@ void function() {
       // Pick first accessory if none is set
       return callback(null, pairingAccessory || MOCK_ACCESSORIES.find(device => ! device.isPaired));
     }
+  });
+
+  Homey.registerEmitHandler('getServices', (ev, data, callback) => {
+    callback(null, []);
   });
 
   // Mock the pairing process.

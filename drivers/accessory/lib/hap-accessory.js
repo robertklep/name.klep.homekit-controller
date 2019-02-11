@@ -1,4 +1,6 @@
+const assert         = require('assert');
 const { HttpClient } = require('../../../modules/hap-controller');
+const { Accessory }  = require('./homekit');
 
 const CATEGORIES = {
   1: 'Other', 2: 'Bridge', 3: 'Fan', 4: 'Garage',
@@ -18,7 +20,7 @@ const PAIRING_ERRORS = {
   0x07 : 'Busy Error',
 };
 
-const Accessory = module.exports = class Accessory {
+const HAPAccessory = module.exports = class HAPAccessory {
   constructor(data) {
     this.name                = data.name;
     this.address             = data.address;
@@ -36,30 +38,26 @@ const Accessory = module.exports = class Accessory {
 
   async pair(pin) {
     const client = new HttpClient(this.id, this.address, this.port);
-    return client.pairSetup(pin).then(() => {
+    try {
+      await client.pairSetup(pin);
       this.pairingData = client.getLongTermData();
       console.log('pairing data', this.pairingData);
-    }).catch(e => {
+      return this;
+    } catch(e) {
       e = e || Error(PAIRING_ERRORS[0x01]);
       console.log('pairing error', e);
       throw e;
-      /*
-      const unknownError = Error('Unknown error (accessory already paired?)');
+    }
+  }
 
-      if (! e) {
-        throw unknownError;
-      }
-      if (e instanceof Error) e = e.message;
-      if (e.includes('Error: ')) {
-        const errorCode = (e.match(/Error: (\d+)/) || [])[0];
-        if (errorCode in PAIRING_ERRORS) {
-          throw Error(PAIRING_ERRORS[errorCode]);
-        }
-        throw unknownError;
-      }
-      throw e;
-      */
-    });
+  async getAccessories() {
+    assert(this.pairingData, 'NO_PAIRING_DATA');
+    const client      = new HttpClient(this.id, this.address, this.port, this.pairingData);
+    const accessories = await client.getAccessories();
+    if ('accessories' in accessories) {
+      return accessories.accessories.map(acc => Accessory.fromJSON(acc));
+    }
+    return [];
   }
 
   toHomey() {
@@ -72,4 +70,4 @@ const Accessory = module.exports = class Accessory {
   }
 }
 
-Accessory.fromJSON = json => new Accessory(json);
+HAPAccessory.fromJSON = json => new HAPAccessory(json);

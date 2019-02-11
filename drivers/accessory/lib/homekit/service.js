@@ -1,11 +1,12 @@
 const assert         = require('assert');
 const { toUUID }     = require('./utils');
-const Characteristic = require('./Characteristic');
+const Characteristic = require('./characteristic');
 const { Services }   = require('./data/hap-types.json');
 const MAPPING        = require('./data/services-to-classes.json');
 
 const Service = module.exports = class Service {
-  constructor({ iid, type, characteristics = null, hidden = false, primary = false }) {
+  constructor({ aid, iid, type, characteristics = null, hidden = false, primary = false }) {
+    this.aid             = aid;
     this.iid             = iid;
     this.type            = type;
     this.uuid            = toUUID(type);
@@ -39,16 +40,23 @@ const Service = module.exports = class Service {
     if (! MAPPING[this.name]) return null;
     // TODO: use accessory information
     return {
-      class        : MAPPING[this.name],
+      name  : this.name,
+      class : MAPPING[this.name],
+      data  : {
+        id  : `${ this.aid }:${ this.iid }`,
+        aid : this.aid,
+        iid : this.iid
+      },
       capabilities : this.characteristics.map(c => c.toHomey()).filter(s => s),
     }
   }
 }
 
-Service.fromJSON = json => {
+Service.fromJSON = (aid, json) => {
   return new Service({
+    aid:             aid,
     iid:             json.iid,
     type:            json.type,
-    characteristics: json.characteristics.map(characteristic => Characteristic.fromJSON(characteristic))
+    characteristics: (json.characteristics || []).map(characteristic => Characteristic.fromJSON(aid, json.iid, characteristic))
   });
 };

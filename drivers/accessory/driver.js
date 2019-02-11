@@ -1,6 +1,6 @@
-const Homey           = require('homey');
-const { Accessory }   = require('./lib');
-const { IPDiscovery } = require('../../modules/hap-controller');
+const Homey            = require('homey');
+const { HAPAccessory } = require('./lib');
+const { IPDiscovery }  = require('../../modules/hap-controller');
 
 module.exports = class AccessoryDriver extends Homey.Driver {
 
@@ -14,13 +14,19 @@ module.exports = class AccessoryDriver extends Homey.Driver {
 
       const discovery = new IPDiscovery();
       discovery.on('serviceUp', accessory => {
-        accessory = Accessory.fromJSON(accessory);
+        accessory = HAPAccessory.fromJSON(accessory);
         discoveredAccessories[accessory.id] = accessory;
 
         this.log('Discovered', accessory.name, '→', JSON.stringify(accessory));
 
         // Check if accessory has already been paired with Homey.
-        accessory.isPaired = this.getDevice({ id : accessory.id }) instanceof Homey.Device;
+        const pairingData = Homey.ManagerSettings.get('pairing.data.' + accessory.id);
+        if (pairingData) {
+          accessory.isPaired    = true;
+          accessory.pairingData = pairingData;
+        } else {
+          accessory.isPaired = false;
+        }
 
         return socket.emit('accessoryFound', accessory);
       }).start();
@@ -66,11 +72,32 @@ module.exports = class AccessoryDriver extends Homey.Driver {
       try {
         await pairingAccessory.pair(pin);
         this.log('Pairing success');
+
+        // Save pairing data as setting.
+        Homey.ManagerSettings.set('pairing.data.' + pairingAccessory.id, pairingAccessory.pairingData);
+
+        // Set as selected accessory.
+        selectedAccessory = pairingAccessory;
+
+        // Return "Homeyfied" accessory data to pairing template.
         return cb(null, pairingAccessory.toHomey());
       } catch(e) {
         this.log('Pairing failed', e);
         return cb(e.message);
       }
+    }).on('getAccessories', async (data, cb) => {
+      this.log(`Going to get accessories for ${ selectedAccessory.name }`);
+      if (! selectedAccessory.pairingData) {
+        selectedAccessory.pairingData = Homey.ManagerSettings.get('pairing.data.' + selectedAccessory.id);
+      }
+      try {
+        const accessories = await selectedAccessory.getAccessories();
+        this.log('got accessories', accessories.map(a => a.toHomey()));
+      } catch(e) {
+        this.log('Accessory retrieval failed', e);
+        return cb(e.message);
+      }
+      return cb(null, []);
     });
   }
 

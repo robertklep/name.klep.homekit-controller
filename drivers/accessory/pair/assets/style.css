@@ -43,6 +43,10 @@
   background: #DFF2BF !important;
 }
 
+.homekit-controller button:hover {
+  background: inherit !important;
+}
+
 /* https://loading.io/css/ */
 .homekit-controller .spinner {
   display: inline-block;

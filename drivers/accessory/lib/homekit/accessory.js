@@ -1,4 +1,4 @@
-const Service    = require('./Service');
+const Service    = require('./service');
 const { toUUID } = require('./utils');
 
 const Accessory = module.exports = class Accessory {
@@ -71,6 +71,6 @@ const Accessory = module.exports = class Accessory {
 Accessory.fromJSON = json => {
   return new Accessory({
     aid:      json.aid,
-    services: json.services.map(service => Service.fromJSON(service)),
+    services: (json.services || []).map(service => Service.fromJSON(json.aid, service)),
   });
 };

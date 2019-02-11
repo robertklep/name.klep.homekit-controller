@@ -2,10 +2,10 @@
 <html>
   <head>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='../../../assets/base-driver/mustard-ui.css'>
-    <link rel='stylesheet' href='../../../assets/base-driver/style.css'>
-    <script src='../../../assets/base-driver/vue.min.js'></script>
-    <script src='../../../assets/base-driver/homey-pairing-mock.js'></script>
+    <link rel='stylesheet' href='assets/mustard-ui.css'>
+    <link rel='stylesheet' href='assets/style.css'>
+    <script src='assets/vue.min.js'></script>
+    <script src='assets/homey-pairing-mock.js'></script>
     <script src='assets/mock-setup.js'></script>
   </head>
   <body class='homekit-controller'>
@@ -53,7 +53,7 @@
                 <button
                   v-if           = 'accessory.isPaired'
                   class          = 'button-small button-shadow button-primary'
-                  @click.prevent = 'selectAccessory(accessory)'>Select</button>
+                  @click.prevent = 'selectAccessory(accessory)'>Click to select</button>
                 <button
                   v-else
                   class          = 'button-small button-shadow button-warning'

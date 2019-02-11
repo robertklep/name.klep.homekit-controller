@@ -1,3 +1,3 @@
 module.exports = {
-  Accessory: require('./accessory'),
+  HAPAccessory: require('./hap-accessory'),
 };

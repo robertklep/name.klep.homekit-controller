@@ -4,13 +4,13 @@ const { Characteristics } = require('./data/hap-types.json');
 const MAPPING             = require('./data/characteristics-to-capabilities.json');
 
 const Characteristic = module.exports = class Characteristic {
-  constructor(o) {
-    Object.assign(this, o);
+  constructor(aid, iid, o) {
+    Object.assign(this, { aid, iid }, o);
     this.uuid = toUUID(this.type);
 
     // Look up characteristic in HAP types table.
     const characteristic = Characteristics.find(c => c.UUID === this.uuid);
-    assert(characteristic);
+    assert(characteristic, `Unknown characteristic [${ this.uuid }]`);
     this.name = characteristic.Name;
   }
 
@@ -23,7 +23,7 @@ const Characteristic = module.exports = class Characteristic {
   }
 }
 
-Characteristic.fromJSON = json => new Characteristic(json);
+Characteristic.fromJSON = (aid, iid, json) => new Characteristic(aid, iid, json);
 
 Characteristic.PERMISSIONS = {
   PAIRED_READ:     'pr',
