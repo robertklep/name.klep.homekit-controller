@@ -38,9 +38,14 @@ const Service = module.exports = class Service {
 
   toHomey() {
     if (! MAPPING[this.name]) return null;
+
+    // Determine name based on Name characteristic
+    let name = this.getCharacteristicByName('Name');
+    name = name ? name.value : this.name;
+
     // TODO: use accessory information
     return {
-      name  : this.name,
+      name  : name,
       class : MAPPING[this.name],
       data  : {
         id  : `${ this.aid }:${ this.iid }`,

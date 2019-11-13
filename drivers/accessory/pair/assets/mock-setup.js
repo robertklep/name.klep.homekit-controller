@@ -44,8 +44,65 @@ void function() {
     }
   });
 
-  Homey.registerEmitHandler('getServices', (ev, data, callback) => {
-    callback(null, []);
+  Homey.registerEmitHandler('getAccessories', (ev, data, callback) => {
+    return callback(null, [
+{
+  "metadata": {
+    "name": "Simple Light",
+    "manufacturer": "Default-Manufacturer",
+    "model": "Default-Model",
+    "serial": "Default-SerialNumber"
+  },
+  "devices": [
+    {
+      "name": "Lightbulb",
+      "class": "light",
+      "data": {
+        "id": "1:7",
+        "aid": 1,
+        "iid": 7
+      },
+      "capabilities": [
+        "onoff",
+        "dim",
+        "light_hue",
+        "light_saturation"
+      ]
+    },
+    {
+      "name": "Lightbulb",
+      "class": "light",
+      "data": {
+        "id": "1:7",
+        "aid": 1,
+        "iid": 7
+      },
+      "capabilities": [
+        "onoff",
+        "dim",
+        "light_hue",
+        "light_saturation"
+      ]
+    },
+    {
+      "name": "Lightbulb",
+      "class": "light",
+      "data": {
+        "id": "1:7",
+        "aid": 1,
+        "iid": 7
+      },
+      "capabilities": [
+        "onoff",
+        "dim",
+        "light_hue",
+        "light_saturation"
+      ]
+    }
+  ]
+}
+    ]
+    );
   });
 
   // Mock the pairing process.

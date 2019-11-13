@@ -23,6 +23,26 @@
   margin-top:  0;
 }
 
+.homekit-controller fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.homekit-controller fieldset legend {
+  margin-left: 1em;
+}
+
+.homekit-controller div.alternate {
+  margin: 0 0.25em 0.25em;
+  border-radius: 3px;
+  border: 1px solid white;
+}
+
+.homekit-controller div.alternate:nth-child(even) {
+  background: #eee;
+  border-color: #ddd;
+}
+
 .homekit-controller .accessory-panel {
   border: 1px solid #aaa;
 }

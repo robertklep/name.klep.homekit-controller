@@ -10,12 +10,15 @@
   </head>
   <body class='homekit-controller'>
     <div id='container-select'>
-      <div v-if='accessory' class='panel'>
-        <div class='panel-head'>
-          <p class='panel-title'><i>{{ accessory.name }}</i></p>
-        </div>
-        <div class='panel-body row'>
-        </div>
+      <div v-if='accessories.length' class='panel'>
+        <fieldset v-for='accessory in accessories'>
+          <legend>{{ accessory.metadata.name }}</legend>
+          <div class='row alternate' v-for='device in accessory.devices'>
+            <div class='col col-xs-6'>{{ device.name }}</div>
+            <div class='col col-xs-5'>{{ device.class }}</div>
+            <div class='col col-xs-1 align-right'><input style='vertical-align: middle' type=checkbox></div>
+          </div>
+        </fieldset>
       </div>
       <div v-else>
         <div class='spinner'></div>
@@ -26,18 +29,12 @@
     new Vue({
       el:      '#container-select',
       data:    {
-        accessory: null,
         accessories: [],
       },
       mounted() {
-        Homey.emit('selectAccessory', (err, accessory) => {
-          if (err) return this.handleError('Failed to get selected accessory: ' + err);
-          console.log('Got selected accessory:', accessory);
-          this.accessory = accessory;
-          Homey.emit('getAccessories', (err, accessories) => {
-            if (err) return this.handleError('Failed to get accessories: ' + err);
-            this.accessories = accessories;
-          });
+        Homey.emit('getAccessories', (err, accessories) => {
+          if (err) return this.handleError('Failed to get accessories: ' + err);
+          this.accessories = accessories;
         });
       },
       methods : {

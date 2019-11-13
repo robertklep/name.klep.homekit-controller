@@ -44,7 +44,17 @@ const HAPAccessory = module.exports = class HAPAccessory {
       console.log('pairing data', this.pairingData);
       return this;
     } catch(e) {
-      e = e || Error(PAIRING_ERRORS[0x01]);
+      if (typeof e === 'string') {
+        e = Error(e);
+      } else if (! e) {
+        e = Error(PAIRING_ERRORS[0x01]);
+      }
+      if (e.message.includes('Error:')) {
+        const code = e.message.match(/Error: (\d+)/)[1];
+        if (code in PAIRING_ERRORS) {
+          e = Error(PAIRING_ERRORS[code]);
+        }
+      }
       console.log('pairing error', e);
       throw e;
     }

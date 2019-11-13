@@ -92,12 +92,12 @@ module.exports = class AccessoryDriver extends Homey.Driver {
       }
       try {
         const accessories = await selectedAccessory.getAccessories();
-        this.log('got accessories', accessories.map(a => a.toHomey()));
+        console.log('%j', accessories.map(a => a.toHomey()));
+        return cb(null, accessories.map(a => a.toHomey()));
       } catch(e) {
         this.log('Accessory retrieval failed', e);
         return cb(e.message);
       }
-      return cb(null, []);
     });
   }
 
